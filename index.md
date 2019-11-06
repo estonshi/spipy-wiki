@@ -1,37 +1,28 @@
-## Welcome to GitHub Pages
+---
+title: Home
+---
 
-You can use the [editor on GitHub](https://github.com/estonshi/spipy.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+**spipy** is a python package designed for XFEL single particle 
+imaging (SPI) analysis and reconstruction.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Nowadays, XFEL (X-ray free electron laser) is becoming a powerful 
+method to detect inner structures of micro objects. 
+More and more countries are building XFEL facilities for global use:
 
-### Markdown
+1. LCLS , U.S.A., from 2009
+2. SACLA, Japan, from 2012
+3. PAL XFEL, South Korea, from 2016
+4. European XFEL, Europe, from 2018
+5. SXFEL, China, to be lanched in 2020
+6. ...
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+There are multiple kinds of imaging types for XFEL, such as SFX, WAXS, SPI, etc.
+Our group focus on single particle imaging using biological samples such as virus and proteins.
+In the meanwhile, other materials like inorganic compounds are also suitable for experiment.
 
-```markdown
-Syntax highlighted code block
+**spipy** is hosted on [Github](https://github.com/LiuLab-CSRC/spipy)
+and maintained by `ycshi` from Tsinghua University and Beijing Computational Science Research Center.
+Everyone is welcomed to contact the email below for discussion or bug report.
 
-# Header 1
-## Header 2
-### Header 3
+> Author email : shiyc12 *AT* csrc.ac.cn
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/estonshi/spipy.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
