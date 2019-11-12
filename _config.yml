@@ -1,7 +1,7 @@
 # ----
 # Site
 
-title: spipy-wiki
+title: spipy-blog
 url: "https://estonshi.github.io/spipy-wiki/"
 baseurl:
 google_analytics_key:
@@ -15,7 +15,7 @@ author:
   email:
   twitter: # twitter username without the @ symbol
 social:
-  name: spipy Wiki
+  name: spipy Blog
   links:
     - https://github.com/estonshi/spipy-wiki
 
