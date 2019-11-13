@@ -46,7 +46,7 @@ order: 1
     - `det_size` : detector size in pixels, (size_x, size_y)
     - `denter` : center of pattern, (Cx, Cy), default=None
 
-    [__return__] maps pixels in detector into k-space, return (q_coor, qmax, qmin, q_len). "*q_coor*" is coordinates in k-space, shape=(Nx,Ny,3); "*qmax*" is max q value of detector; "*qmin*" is min q value of detector; "*q_len*" is side length of k space matrix, in pixel.
+    [__return__] maps pixels in detector into k-space, return (q_coor, qmax, qmin, q_len). "*q_coor*" is coordinates in k-space, shape=(3,Nx,Ny); "*qmax*" is max q value of detector; "*qmin*" is min q value of detector; "*q_len*" is side length of k space matrix, in pixel.
 
 > analyse.saxs
 
