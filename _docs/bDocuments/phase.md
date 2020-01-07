@@ -4,6 +4,8 @@ category: Documents
 order: 4
 ---
 
+**Functional based programming mode**
+
 * _Phase retrieval algorithms_ :
     * _ER (error reduction)_
     * _DM (difference map)_
@@ -81,7 +83,6 @@ order: 4
 - 'phasing_parameters|background' : evaluate background while phasing, default=True
 ```
 
----
 **phase.phase3d and phase.phase2d have same *APIs*** : 
 
 - **new_project** (data_path, mask_path=None, path=None, name=None)
@@ -108,3 +109,112 @@ order: 4
     - `project_path` : string, the path of project directory that you want to switch to
 
     [__return__] switch to a existing project, no return
+
+---
+**Modelized programmming mode**
+
+> phase.phmodel
+
+(**NOTE** : All of the class in phmodel has a "run" function, which will be called by **phexec.Runner** to run a node, users don't need to use it.)
+
+- class **phInput** : input node of a phasing model
+    - \_\_init\_\_ (self, config\_dict, name=None)
+        - `config_dict` : parameter dict
+
+        ```
+        { 
+            "pattern_path" : xxx.npy,
+            
+            "mask_path" : xxx.npy (1 is masked area),
+            
+            "center" : [62,62],
+            
+            "center_mask" : 5,
+            
+            "edge_mask" : [60,64],
+            
+            "subtract_percentile" : False,
+            
+            "fixed_support_r" : 20,
+            
+            "background" : True,
+            
+            "initial_model" : xxx.npy
+        }
+        ```
+        
+        - `name` : name of this node, default is "Input"
+    - after (self, father_node)
+        - `father_node` : set father node of this node
+        
+        [__return__] self
+
+- class **phOutput** : output node of a phasing model
+    - \_\_init\_\_ (self, name=None)
+    - after (self, father_node)
+
+- class **ERA** : ERA algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size, name=None)
+        - `iteration` : how many iterations for ERA to run, int
+        - `support_size` : (estimation) number of pixels within final retrieved sample, int
+    - after (self, father_node)
+
+- class **DM** : DM algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size, name=None)
+    - after (self, father_node)
+
+- class **RAAR** : RAAR algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size, beta, name=None)
+        - `beta` : beta value, a float from 0~1. If beta==0, then RAAR degenerate to ERA
+    - after (self, father_node)
+
+> phase.phexec
+
+- class **Runner** : running phasing model, support mpi4py parallel
+    - \_\_init\_\_ (self, inputnode, outputnode)
+        - `inputnode` : a "phInput" instance, as input node of the whole model
+        - `outputnode` : a "phOutput" instance, as output node of the whole model
+    - run (self, repeat=1)
+        - `repeat` : times of independent phasing **of this mpi rank**, int
+
+```python
+# Examles of using modelized programming,
+# you can also find this at "spipy/test_spipy/phase/test_phmodel.py"
+
+import numpy as np
+from spipy.phase import phexec, phmodel
+
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+mrank = comm.Get_rank()
+msize = comm.Get_size()
+
+if __name__ == "__main__":
+
+    config_input = {
+        "pattern_path" : "pattern.npy",
+        "mask_path" : "pat_mask.npy",
+        "center" : [61,61],
+        "center_mask" : 5,
+        "edge_mask" : None,
+        "subtract_percentile" : False,
+        "fixed_support_r" : None,
+        "background" : True,
+        "initial_model" : None
+    }
+    iters = [100,200,200]
+    support_size = 100
+    beta = 0.8
+    
+    l1 = phmodel.pInput(config_input)
+    l2 = phmodel.RAAR(iters[0], support_size, beta).after(l1)
+    l3 = phmodel.DM(iters[1], support_size).after(l2)
+    l4 = phmodel.ERA(iters[2], support_size).after(l3)
+    l5 = phmodel.pOutput().after(l4)
+
+    runner = phexec.Runner(inputnode = l1, outputnode = l5)
+    out = runner.run(repeat = 2)
+    
+    if mrank == 0:
+        runner.plot_result(out)
+```

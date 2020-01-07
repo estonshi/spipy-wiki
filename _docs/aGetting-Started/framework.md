@@ -93,6 +93,10 @@ The architecture of spipy package is shown as below:
         * `use_project` : switch to a existing project
     * phase3d
         * the same as phase2d
+    * phmodel
+        * `phInput`,`phOutput`,`ERA`,`DM`,`RAAR` : different types of phasing models for modelized programming
+    * phexec
+        * `Runner` : class, used for execuating phasing models
 * [**simulate**]() : *diffraction simulation*
     * sim_adu
         * `go_magic` : generates diffraction patterns by atom-reflection/FFT using single/multiple jobs
