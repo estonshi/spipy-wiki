@@ -1,6 +1,6 @@
 # spipy wiki
 
-This is a Github Pages wiki blog.
+This is a Github Pages wiki blog v3.1.
 
 The theme was made by [CloudCannon](http://cloudcannon.com/), the Cloud CMS for Jekyll.
 
