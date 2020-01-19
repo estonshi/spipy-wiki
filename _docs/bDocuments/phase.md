@@ -4,6 +4,139 @@ category: Documents
 order: 4
 ---
 
+**Modelized programmming mode**
+
+> phase.phmodel
+
+(**NOTE** : All of the class in phmodel has a "run" function, which will be called by **phexec.Runner** to run a node, users don't need to use it.)
+
+- class **phInput** : input node of a phasing model
+    - \_\_init\_\_ (self, config\_dict, name=None)
+        - `config_dict` : parameter dict
+
+        ```
+        { 
+            "pattern_path" : xxx.npy,
+            
+            "mask_path" : xxx.npy (1 is masked area),
+            
+            "center" : [62,62],
+            
+            "center_mask" : 5,
+            
+            "edge_mask" : [60,64],
+            
+            "subtract_percentile" : False,
+            
+            "fixed_support_r" : 20,
+            
+            "background" : True,
+            
+            "initial_model" : xxx.npy
+        }
+        ```
+        
+        - `name` : name of this node, default is "Input"
+    - after (self, father_node)
+        - `father_node` : set father node of this node
+        
+        [__return__] self
+
+- class **phOutput** : output node of a phasing model
+    - \_\_init\_\_ (self, name=None)
+    - after (self, father_node)
+
+- class **ERA** : ERA algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size, name=None)
+        - `iteration` : how many iterations for ERA to run, int
+        - `support_size` : (estimation) number of pixels within final retrieved sample, int
+    - after (self, father_node)
+
+- class **DM** : DM algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size, name=None)
+    - after (self, father_node)
+
+- class **RAAR** : RAAR algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size, beta, name=None)
+        - `beta` : a float from \[0,1\]. If beta==0, then RAAR degenerate to ERA
+    - after (self, father_node)
+
+- class **HIO** : HIO algorithm phasing node
+    - \_\_init\_\_ (self, iteration, support_size,  gamma, name=None)
+        - `gamma` : greedy rate, a float from (0,1]. If gamma==1, then HIO degenerate to ERA
+    - after (self, father_node)
+
+> phase.phexec
+
+- class **Runner** : running phasing model, support mpi4py parallel
+    - \_\_init\_\_ (self, inputnode = None, outputnode = None, loadfile = None, change_dataset = None)
+        - `inputnode` : a "phInput" instance, as input node of the whole model
+        - `outputnode` : a "phOutput" instance, as output node of the whole model
+        - `loadfile` : str, a model file path to load
+        - `change_dataset` : a dict, {"pattern\_path" : "xxx.npy", "mask\_path" : "xxx.npy"/None, "initial\_model" : "xxx.npy"/None}. Only valid when 'loadfile' is fiven. Necessary when 'loadfile' is a skeleton model file.
+
+        [__NOTE__] You can specify either `inputnode` + `outputnode` or `loadfile` + `change_dataset` to initiate a Runner.
+        
+    - run (self, repeat=1)
+        - `repeat` : times of independent phasing **of this mpi rank**, int
+    - dump\_model (self, model\_file, skeleton = False)
+        - `model_file` : str, file path to save this model
+        - `skeleton` : bool, whether to save data of this model, save (False) or not save (True)
+
+        [__return__] A file will be generated to describe the model you created. You can share this file to others to establish a same model.
+
+```python
+# Examles of using modelized programming,
+# you can also find this at "spipy/test_spipy/phase/test_phmodel.py"
+
+import numpy as np
+from spipy.phase import phexec, phmodel
+
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+mrank = comm.Get_rank()
+msize = comm.Get_size()
+
+if __name__ == "__main__":
+
+    config_input = {
+        "pattern_path" : "pattern.npy",
+        "mask_path" : "pat_mask.npy",
+        "center" : [61,61],
+        "center_mask" : 5,
+        "edge_mask" : None,
+        "subtract_percentile" : False,
+        "fixed_support_r" : None,
+        "background" : True,
+        "initial_model" : None
+    }
+    iters = [100,200,200]
+    support_size = 100
+    beta = 0.8
+    newdataset = {"pattern_path" : "pattern.npy", "mask_path" : "pat_mask.npy", "initial_model" : None}
+
+    
+    l1 = phmodel.pInput(config_input)
+    l2 = phmodel.RAAR(iters[0], support_size, beta).after(l1)
+    l3 = phmodel.DM(iters[1], support_size).after(l2)
+    l4 = phmodel.ERA(iters[2], support_size).after(l3)
+    l5 = phmodel.pOutput().after(l4)
+
+    runner = phexec.Runner(inputnode = l1, outputnode = l5)
+    out = runner.run(repeat = 2)
+    
+    if mrank == 0:
+        runner.plot_result(out)
+        
+    # Dump model and load it
+
+    runner.dump_model("temp_model.json", skeleton=True)
+    runner2 = phexec.Runner(inputnode = None, outputnode = None, \
+                            loadfile = "temp_model.json", change_dataset = newdataset)
+    out = runner2.run(repeat = 1)
+```
+
+---
 **Functional based programming mode**
 
 * _Phase retrieval algorithms_ :
@@ -109,131 +242,3 @@ order: 4
     - `project_path` : string, the path of project directory that you want to switch to
 
     [__return__] switch to a existing project, no return
-
----
-**Modelized programmming mode**
-
-> phase.phmodel
-
-(**NOTE** : All of the class in phmodel has a "run" function, which will be called by **phexec.Runner** to run a node, users don't need to use it.)
-
-- class **phInput** : input node of a phasing model
-    - \_\_init\_\_ (self, config\_dict, name=None)
-        - `config_dict` : parameter dict
-
-        ```
-        { 
-            "pattern_path" : xxx.npy,
-            
-            "mask_path" : xxx.npy (1 is masked area),
-            
-            "center" : [62,62],
-            
-            "center_mask" : 5,
-            
-            "edge_mask" : [60,64],
-            
-            "subtract_percentile" : False,
-            
-            "fixed_support_r" : 20,
-            
-            "background" : True,
-            
-            "initial_model" : xxx.npy
-        }
-        ```
-        
-        - `name` : name of this node, default is "Input"
-    - after (self, father_node)
-        - `father_node` : set father node of this node
-        
-        [__return__] self
-
-- class **phOutput** : output node of a phasing model
-    - \_\_init\_\_ (self, name=None)
-    - after (self, father_node)
-
-- class **ERA** : ERA algorithm phasing node
-    - \_\_init\_\_ (self, iteration, support_size, name=None)
-        - `iteration` : how many iterations for ERA to run, int
-        - `support_size` : (estimation) number of pixels within final retrieved sample, int
-    - after (self, father_node)
-
-- class **DM** : DM algorithm phasing node
-    - \_\_init\_\_ (self, iteration, support_size, name=None)
-    - after (self, father_node)
-
-- class **RAAR** : RAAR algorithm phasing node
-    - \_\_init\_\_ (self, iteration, support_size, beta, name=None)
-        - `beta` : beta value, a float from 0~1. If beta==0, then RAAR degenerate to ERA
-    - after (self, father_node)
-
-> phase.phexec
-
-- class **Runner** : running phasing model, support mpi4py parallel
-    - \_\_init\_\_ (self, inputnode = None, outputnode = None, loadfile = None, change_dataset = None)
-        - `inputnode` : a "phInput" instance, as input node of the whole model
-        - `outputnode` : a "phOutput" instance, as output node of the whole model
-        - `loadfile` : str, a model file path to load
-        - `change_dataset` : a dict, {"pattern\_path" : "xxx.npy", "mask\_path" : "xxx.npy"/None, "initial\_model" : "xxx.npy"/None}. Only valid when 'loadfile' is given.
-
-        [__NOTE__] You can specify either `inputnode` + `outputnode` or `loadfile` + `change_dataset` to initiate a Runner.
-        
-    - run (self, repeat=1)
-        - `repeat` : times of independent phasing **of this mpi rank**, int
-    - dump\_model (self, model\_file, skeleton = False)
-        - `model_file` : str, file path to save this model
-        - `skeleton` : bool, whether to save data of this model, save (False) or not save (True)
-
-        [__return__] A file will be generated to describe the model you created. You can share this file to others to establish a same model.
-
-```python
-# Examles of using modelized programming,
-# you can also find this at "spipy/test_spipy/phase/test_phmodel.py"
-
-import numpy as np
-from spipy.phase import phexec, phmodel
-
-from mpi4py import MPI
-comm = MPI.COMM_WORLD
-mrank = comm.Get_rank()
-msize = comm.Get_size()
-
-if __name__ == "__main__":
-
-    config_input = {
-        "pattern_path" : "pattern.npy",
-        "mask_path" : "pat_mask.npy",
-        "center" : [61,61],
-        "center_mask" : 5,
-        "edge_mask" : None,
-        "subtract_percentile" : False,
-        "fixed_support_r" : None,
-        "background" : True,
-        "initial_model" : None
-    }
-    iters = [100,200,200]
-    support_size = 100
-    beta = 0.8
-    newdataset = {"pattern_path" : "pattern.npy", "mask_path" : "pat_mask.npy", "initial_model" : None}
-
-    
-    l1 = phmodel.pInput(config_input)
-    l2 = phmodel.RAAR(iters[0], support_size, beta).after(l1)
-    l3 = phmodel.DM(iters[1], support_size).after(l2)
-    l4 = phmodel.ERA(iters[2], support_size).after(l3)
-    l5 = phmodel.pOutput().after(l4)
-
-    runner = phexec.Runner(inputnode = l1, outputnode = l5)
-    out = runner.run(repeat = 2)
-    
-    if mrank == 0:
-        runner.plot_result(out)
-        
-    # Dump model and load it
-
-    runner.dump_model("temp_model.json", skeleton=True)
-    runner2 = phexec.Runner(inputnode = None, outputnode = None, \
-                            loadfile = "temp_model.json", change_dataset = newdataset)
-    out = runner2.run(repeat = 1)
-```
