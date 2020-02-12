@@ -16,7 +16,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
 
 **NOTE-1** : All of the classes in 'phmodel' module has a 'run' function, which will be called by **phexec.Runner** to run a node, users don't need to use it.
 
-**NOTE-2** : The instance of classes in 'pModel' has an 'id' attribute, which is the identical number of a node in one network.
+**NOTE-2** : Every instance of classes in 'phmodel' has an 'id' attribute, which is the identical number of a node in the network.
 
 - class **pInput** : input node of a phasing network
     - \_\_init\_\_ (self, config\_dict, name=None)
@@ -131,8 +131,8 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
         [__return__] A file will be generated to describe the network you created. You can share this file to others to build a same network.
 
     - save\_h5 (self, out, save_file)
-        - out : the output data stream from pOutput node
-        - save_file : save output data stream to a HDF5 file
+        - `out` : the output data stream from pOutput node
+        - `save_file` : save output data stream to a HDF5 file
 
 **--- Programming example to build a network model like the figure above ---**
 
