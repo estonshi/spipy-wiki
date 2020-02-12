@@ -4,90 +4,141 @@ category: Documents
 order: 4
 ---
 
-**Modelized programmming mode**
+**Phase Retrieval Network Framework (Suggested)**
+
+In this framework, you can use different algorithms to build a phasing network, just like building a neural network using pytorch. Here every **node** contains an algorithm and the **data stream** goes through all of the nodes in your specified order. The framework supports multiple input nodes and one output node. It could do phasing of both **2D pattern** and **3D volume** inputs.
+
+Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. More methods are under design and will be released later. See an example network below for a straight forward look.
+
+![example](../../images/PRNF-example.png)
 
 > phase.phmodel
 
-(**NOTE** : All of the class in phmodel has a "run" function, which will be called by **phexec.Runner** to run a node, users don't need to use it.)
+**NOTE-1** : All of the classes in 'phmodel' module has a 'run' function, which will be called by **phexec.Runner** to run a node, users don't need to use it.
 
-- class **phInput** : input node of a phasing model
+**NOTE-2** : The instance of classes in 'pModel' has an 'id' attribute, which is the identical number of a node in one network.
+
+- class **pInput** : input node of a phasing network
     - \_\_init\_\_ (self, config\_dict, name=None)
         - `config_dict` : parameter dict
 
         ```
-        { 
+        {
+            # input diffraction intensity (both 2D and 3D are fine)
             "pattern_path" : xxx.npy,
+
+            # input mask (masked pixel is 1)
+            "mask_path" : xxx.npy,
+
+            # the center location of input pattern
+            "center" : [62,62] (or [62,62,62]),
             
-            "mask_path" : xxx.npy (1 is masked area),
-            
-            "center" : [62,62],
-            
+            # radius of central mask, set None to ignore
             "center_mask" : 5,
             
+            # inside and outside radius of a ring area to be masked, set None to ignore
             "edge_mask" : [60,64],
             
+            # subtract input pattern by a percentile of itself, usually set to False
             "subtract_percentile" : False,
             
-            "fixed_support_r" : 20,
+            # radius a fixed circle support, set None to ignore
+            "fixed_support_r" : 10,
             
+            # whether to fit backgound in phasing
             "background" : True,
             
+            # the initial model, set None to use random initiaion
             "initial_model" : xxx.npy
         }
         ```
         
-        - `name` : name of this node, default is "Input"
+        - `name` : name of this node, default is class name
     - after (self, father_node)
-        - `father_node` : set father node of this node
+        - `father_node` : add a father to this node
         
-        [__return__] self
+        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
 
-- class **phOutput** : output node of a phasing model
+- class **pOutput** : output node of a phasing network
     - \_\_init\_\_ (self, name=None)
+        - `name` : name of this node, default is class name
     - after (self, father_node)
+        - `father_node` : add father of this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to this node. Importantly, 'pOutput' node could not be father of any nodes.
+
+- class **pMerge** : doing average to data streams from father nodes
+    - \_\_init\_\_ (self, name=None)
+        - `name` : name of this node, default is class name
+    - after (self, father_node)
+        - `father_node` : add father to this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to this node.
 
 - class **ERA** : ERA algorithm phasing node
     - \_\_init\_\_ (self, iteration, support_size, name=None)
         - `iteration` : how many iterations for ERA to run, int
         - `support_size` : (estimation) number of pixels within final retrieved sample, int
+        - `name` : name of this node, default is class name
     - after (self, father_node)
+        - `father_node` : add a father to this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to this node.
 
 - class **DM** : DM algorithm phasing node
     - \_\_init\_\_ (self, iteration, support_size, name=None)
+        - the same with ERA
     - after (self, father_node)
+        - `father_node` : add a father to this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
 
 - class **RAAR** : RAAR algorithm phasing node
     - \_\_init\_\_ (self, iteration, support_size, beta, name=None)
         - `beta` : a float from \[0,1\]. If beta==0, then RAAR degenerate to ERA
+        - others are same with ERA
     - after (self, father_node)
+        - `father_node` : add a father to this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
 
 - class **HIO** : HIO algorithm phasing node
     - \_\_init\_\_ (self, iteration, support_size,  gamma, name=None)
         - `gamma` : greedy rate, a float from (0,1]. If gamma==1, then HIO degenerate to ERA
+        - others are same with ERA
     - after (self, father_node)
+        - `father_node` : add a father to this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
 
 > phase.phexec
 
-- class **Runner** : running phasing model, support mpi4py parallel
-    - \_\_init\_\_ (self, inputnode = None, outputnode = None, loadfile = None, change_dataset = None)
-        - `inputnode` : a "phInput" instance, as input node of the whole model
-        - `outputnode` : a "phOutput" instance, as output node of the whole model
-        - `loadfile` : str, a model file path to load
-        - `change_dataset` : a dict, {"pattern\_path" : "xxx.npy", "mask\_path" : "xxx.npy"/None, "initial\_model" : "xxx.npy"/None}. Only valid when 'loadfile' is fiven. Necessary when 'loadfile' is a skeleton model file.
+- class **Runner** : running phasing network, support mpi4py parallel
+    - \_\_init\_\_ (self, inputnodes = None, outputnode = None, loadfile = None, reload_dataset = None)
+        - `inputnodes` : a list of "pInput" instances, the input nodes of the whole network
+        - `outputnode` : a "pOutput" instance, the output node of the whole network
+        - `loadfile` : str, file path, load network from this json file
+        - `reload_dataset` : a dict, {input_node_id : {"pattern\_path" : "xxx.npy", "mask\_path" : "xxx.npy" or None, "initial\_model" : "xxx.npy" or None}, ...}. The input data stream will be reloaded. Only valid when 'loadfile' is given. Necessary when 'loadfile' is a skeleton network file.
 
-        [__NOTE__] You can specify either `inputnode` + `outputnode` or `loadfile` + `change_dataset` to initiate a Runner.
+        [__NOTE__] You can specify either `inputnode` + `outputnode` or `loadfile` + `reload_dataset` to initiate a Runner.
         
     - run (self, repeat=1)
         - `repeat` : times of independent phasing **of this mpi rank**, int
     - dump\_model (self, model\_file, skeleton = False)
-        - `model_file` : str, file path to save this model
-        - `skeleton` : bool, whether to save data of this model, save (False) or not save (True)
+        - `model_file` : str, file path to save this phasing network
+        - `skeleton` : bool, whether to save input data stream of this network, save (False) or not save (True)
 
-        [__return__] A file will be generated to describe the model you created. You can share this file to others to establish a same model.
+        [__return__] A file will be generated to describe the network you created. You can share this file to others to build a same network.
+
+    - save\_h5 (self, out, save_file)
+        - out : the output data stream from pOutput node
+        - save_file : save output data stream to a HDF5 file
+
+**--- Programming example to build a network model like the figure above ---**
 
 ```python
-# Examles of using modelized programming,
-# you can also find this at "spipy/test_spipy/phase/test_phmodel.py"
+# Examles of using PRNF programming,
+# you can find more at "spipy/test_spipy/phase/test_phmodel.py"
 
 import numpy as np
 from spipy.phase import phexec, phmodel
@@ -110,35 +161,41 @@ if __name__ == "__main__":
         "background" : True,
         "initial_model" : None
     }
-    iters = [200,100,100,200]
-    support_size = 100
+    iters = [150,100,200]
+    support_size = 85
     beta = 0.8
     gamma = 0.05
     newdataset = {"pattern_path" : "pattern.npy", "mask_path" : "pat_mask.npy", "initial_model" : None}
 
-    l1 = phmodel.pInput(config_input)
-    l2 = phmodel.HIO(iters[0], support_size, gamma).after(l1)
-    l3 = phmodel.RAAR(iters[1], support_size, beta).after(l2)
-    l4 = phmodel.DM(iters[2], support_size).after(l3)
-    l5 = phmodel.ERA(iters[3], support_size).after(l4)
+    # set up network
+    l1_0 = phmodel.pInput(config_input)
+    l1_1 = phmodel.pInput(config_input)
+    l2_0 = phmodel.HIO(iters[0], support_size, gamma).after(l1_0)
+    l2_1 = phmodel.ERA(iters[0], support_size).after(l1_1)
+    l2_2 = phmodel.RAAR(iters[0], support_size, beta).after(l1_1)
+    lm = phmodel.pMerge().after(l2_0).after(l2_1).after(l2_2)
+    l4 = phmodel.DM(iters[1], support_size).after(lm)
+    l5 = phmodel.HIO(iters[2], support_size, gamma).after(l4)
     l6 = phmodel.pOutput().after(l5)
 
-    runner = phexec.Runner(inputnode = l1, outputnode = l6)
-    out = runner.run(repeat = 2)
-    
+    # run
+    runner = phexec.Runner(inputnodes = [l1_0, l1_1], outputnode = l6)
+    out = runner.run(repeat = 1)
+
     if mrank == 0:
         runner.plot_result(out)
-        
-    # Dump model and load it
 
+    # Dump network
     runner.dump_model("temp_model.json", skeleton=False)
-    runner2 = phexec.Runner(inputnode = None, outputnode = None, \
-                            loadfile = "temp_model.json", change_dataset = None)
+
+    # Reload network
+    runner2 = phexec.Runner(inputnodes = None, outputnode = None, \
+        loadfile = "temp_model.json", reload_dataset = {l1_0.id:newdataset})
     out = runner2.run(repeat = 1)
 ```
 
 ---
-**Functional based programming mode**
+**Functional based phase retrieval program (deprecated)**
 
 * _Phase retrieval algorithms_ :
     * _ER (error reduction)_

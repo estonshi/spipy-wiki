@@ -24,3 +24,7 @@ order: 1
 [user@linux spipy_gui-1.1]$ conda activate spipy-v3
 (spipy-v3)[user@linux spipy_gui-1.1]$ ./spipy.gui
 ```
+
+#### Note
+
+The graphics UI doesn't support v3.1 features yet. 

@@ -22,6 +22,22 @@ In [1]: from spipy import *
 ```
 
 * Try functions
-    * Go into "spipy/test_spipy" folder, for each module there are some example python scripts. Play with them !
+    * Go into *test\_spipy* folder, for each module there are some example python scripts. Play with them !
 
 ![practice](../../images/testfolder.png)
+
+* Some results
+	* **spipy.phase.phModel** : Phase retrieval results (2D and 3D)
+![prnf-re-2d](../../images/2D-phasing.png)
+![prnf-re-3d](../../images/3D-phasing.png)
+	* **spipy.simulate.sim_adu** : simulation results (intensity pattern and photon pattern)
+![simulation](../../images/simulation.png)
+	* **spipy.image.io** : read pdb, transfer to density map and view ([DataViewer-download](https://github.com/estonshi/DataViewer))
+![readpdb](../../images/pdb2density.jpg)
+	* **spipy.image.preprocess** : hit-finding, transfer intensity to photon, fix artifact, ...
+![fix-artifact](../../images/fix_art_auto.png)
+	* **spipy.analyse.saxs** : find diffraction center, estimate particle size, ...
+![particle-size](../../images/particle-size-estimate.png)
+	* **spipy.merge.tools** : slicing and merging, likelihood calculation, ...
+![slimerg](../../images/slicing_merging.png)
+	* more functions please refer to [framework](framework.md)
