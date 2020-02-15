@@ -24,10 +24,10 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
 
         ```
         {
-            # input diffraction intensity (both 2D and 3D are fine)
+            # input diffraction intensity (both 2D and 3D data are fine)
             "pattern_path" : xxx.npy,
 
-            # input mask (masked pixel is 1)
+            # input mask (masked pixel is 1, unmasked pixel is 0)
             "mask_path" : xxx.npy,
 
             # the center location of input pattern
@@ -54,10 +54,8 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
         ```
         
         - `name` : name of this node, default is class name
-    - after (self, father_node)
-        - `father_node` : add a father to this node
-        
-        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
+
+        [__return__] self. Note 'pInput' nodes should be the first layer of network and thus they don't have 'after' function.
 
 - class **pOutput** : output node of a phasing network
     - \_\_init\_\_ (self, name=None)

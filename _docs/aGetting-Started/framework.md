@@ -85,18 +85,18 @@ The architecture of spipy package is shown as below:
         * `poisson_likelihood` : calculate poisson likelihood between a model slice and an experiment pattern
         * `maximization` : calculate updated slice of orientation j after likelihood maximization
         * `get_quaternion` : calculate quaternions which are uniformly distributed in orientation space
-* [**phase**]() : *phase retrieval*
-    * phase2d
+* [**phase**]() : *phase retrieval network framework (PRNF) or traditional phasing*
+    * phmodel
+        * `pInput`,`pOutput`,`pMerge`,`ERA`,`HIO`,`DM`,`RAAR` : different types of phasing models to build phase retrieval network (PRNF)
+    * phexec
+        * `Runner` : class, used for execuating phase retrieval network
+    * phase2d *(traditional)*
         * `new_project` : create a new project
         * `config_project` : edit configuration file
         * `run_project` : start phasing
         * `use_project` : switch to a existing project
-    * phase3d
+    * phase3d *(traditional)*
         * the same as phase2d
-    * phmodel
-        * `phInput`,`phOutput`,`ERA`,`DM`,`RAAR` : different types of phasing models for modelized programming
-    * phexec
-        * `Runner` : class, used for execuating phasing models
 * [**simulate**]() : *diffraction simulation*
     * sim_adu
         * `go_magic` : generates diffraction patterns by atom-reflection/FFT using single/multiple jobs
