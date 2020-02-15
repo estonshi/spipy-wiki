@@ -46,13 +46,13 @@ order: 1
     - `det_size` : detector size in pixels, (size_x, size_y)
     - `denter` : center of pattern, (Cx, Cy), default=None
 
-    [__return__] maps pixels in detector into k-space, return (q_coor, qmax, qmin, q_len). "*q_coor*" is coordinates in k-space, shape=(3,Nx,Ny); "*qmax*" is max q value of detector; "*qmin*" is min q value of detector; "*q_len*" is side length of k space matrix, in pixel.
+    [__return__] map pixels in detector into 3D k-space, return (q_coor, qmax, qmin, q_len). "*q_coor*" is 3D coordinates in k-space, shape=(3,size_x,size_y); "*qmax*" is max q value of detector; "*qmin*" is min q value of detector; "*q_len*" is side length of k space matrix, in pixel.
 
 > analyse.saxs
 
 - **friedel_search** (pattern, estimated_center, mask=None, small_r=None, large_r=None)
     - `pattern` : input pattern, numpy array, shape=(Nx,Ny)
-    - `estimated_center` : estimated center of the pattern, (Cx, Cy), error within 20 pixels
+    - `estimated_center` : estimated center of the pattern, (Cx, Cy), near to real center
     - `mask` : 0/1 two-value numpy array, shape=(Nx,Ny), 1 means masked pixel. Nan/Inf/negtive pixels should be maksed
     - `small_r` : int, radius of search area for center allocation candidates, in pixel
     - `large_r` : int, radius of area for sampling friedel twin points, in pixel
@@ -99,7 +99,7 @@ order: 1
     - `exparam` : set up parameters of experiment, a list [detector-distance(mm), lambda(A), pixel-length(mm)]
     - `fitarea` : a list [nr, nR], define an ring area (ROI) to do the fitting
     - `badsearchr` : int, if there are more than 10 Iq peaks within badsearchr (in fit area), the pattern will be dropped, unit=pixel
-    - `method` : fitting method, str, chosen from 'q0' (use the first Iq minimum position to estimate diameter) or 'lsq' (fit theoretical Iq curve to given patterns and estimate diameter)
+    - `method` : fitting method, str, chosen from 'q0' (use the first Iq minimum position to estimate diameter) or 'lsq' (fit theoretical Iq curve to given patterns to estimate diameter)
     - `mask` : 0/1 two-value numpy array, shape=(Nx,Ny), 1 means masked pixel
     - `center` : center location of diffraction patterns, (Cx,Cy)
     - `verbose` : bool, whether to display progress bar
@@ -174,7 +174,7 @@ order: 1
     - `center` : the coordinates of zero frequency, (Cx,Cy)
     - `mask` : 0/1 two-value numpy array, shape=(Npx,Npy) or (Npx,Npy,Npz), 1 means masked pixel
 
-    [__return__] Phase Retrieval Transfer Function of phased dataset (2D/3D), return radial profile of PRTF matrix, shape=(Np,3), three columns are (r, Iq, std-err)
+    [__return__] Phase Retrieval Transfer Function of phased dataset (2D/3D), return radial profile of PRTF matrix, shape=(Np,3), three columns are (r, prtf, std-err)
 
 > analyse.rotate
 
