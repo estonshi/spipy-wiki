@@ -8,7 +8,7 @@ order: 4
 
 In this framework, you can use different algorithms to build a phasing network, just like building a neural network using pytorch. Here every **node** contains an algorithm and the **data stream** goes through all of the nodes in your specified order. The framework supports multiple input nodes and one output node. It could do phasing of both **2D pattern** and **3D volume** inputs.
 
-Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. More methods are under design and will be released later. See an example network below for a straight forward look.
+Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algorithms. More methods are under design and will be released later. See an example network below for a straight forward look.
 
 ![example](../../images/PRNF-example.png)
 
@@ -38,6 +38,9 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
             
             # inside and outside radius of a ring area to be masked, set None to ignore
             "edge_mask" : [60,64],
+            
+            # inside and outside radius of a ring area where pattern pixels will be set to 0
+            "edge_remove" : None,
             
             # subtract input pattern by a percentile of itself, usually set to False
             "subtract_percentile" : False,
@@ -73,7 +76,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
         
         [__return__] self. Note you can use this function for serval times to add multiple father to this node.
 
-- class **ERA** : ERA algorithm phasing node
+- class **ERA** : "Error Reduction" algorithm node
     - \_\_init\_\_ (self, iteration, support_size, name=None)
         - `iteration` : how many iterations for ERA to run, int
         - `support_size` : (estimation) number of pixels within final retrieved sample, int
@@ -83,7 +86,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
         
         [__return__] self. Note you can use this function for serval times to add multiple father to this node.
 
-- class **DM** : DM algorithm phasing node
+- class **DM** : "Difference Map" algorithm node
     - \_\_init\_\_ (self, iteration, support_size, name=None)
         - the same with ERA
     - after (self, father_node)
@@ -91,7 +94,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
         
         [__return__] self. Note you can use this function for serval times to add multiple father to a node.
 
-- class **RAAR** : RAAR algorithm phasing node
+- class **RAAR** : RAAR algorithm node
     - \_\_init\_\_ (self, iteration, support_size, beta, name=None)
         - `beta` : a float from \[0,1\]. If beta==0, then RAAR degenerate to ERA
         - others are same with ERA
@@ -100,7 +103,16 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
         
         [__return__] self. Note you can use this function for serval times to add multiple father to a node.
 
-- class **HIO** : HIO algorithm phasing node
+- class **HIO** : "Hybrid Input Output" algorithm node
+    - \_\_init\_\_ (self, iteration, support_size,  gamma, name=None)
+        - `gamma` : greedy rate, a float from (0,1]. If gamma==1, then HIO degenerate to ERA
+        - others are same with ERA
+    - after (self, father_node)
+        - `father_node` : add a father to this node
+        
+        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
+        
+- class **HPR** : "Hybrid projectopn restriction" algorithm node
     - \_\_init\_\_ (self, iteration, support_size,  gamma, name=None)
         - `gamma` : greedy rate, a float from (0,1]. If gamma==1, then HIO degenerate to ERA
         - others are same with ERA
@@ -112,11 +124,12 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** algorithms. Mor
 > phase.phexec
 
 - class **Runner** : running phasing network, support mpi4py parallel
-    - \_\_init\_\_ (self, inputnodes = None, outputnode = None, loadfile = None, reload_dataset = None)
+    - \_\_init\_\_ (self, inputnodes = None, outputnode = None, loadfile = None, reload_dataset = None, comm = None)
         - `inputnodes` : a list of "pInput" instances, the input nodes of the whole network
         - `outputnode` : a "pOutput" instance, the output node of the whole network
         - `loadfile` : str, file path, load network from this json file
         - `reload_dataset` : a dict, {input_node_id : {"pattern\_path" : "xxx.npy", "mask\_path" : "xxx.npy" or None, "initial\_model" : "xxx.npy" or None}, ...}. The input data stream will be reloaded. Only valid when 'loadfile' is given. Necessary when 'loadfile' is a skeleton network file.
+        - `comm` : communicator of MPI ranks. If you use mpi4py, please provide this object. Default is None.
 
         [__NOTE__] You can specify either `inputnode` + `outputnode` or `loadfile` + `reload_dataset` to initiate a Runner.
         

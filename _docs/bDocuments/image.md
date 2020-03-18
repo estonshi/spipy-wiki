@@ -117,6 +117,15 @@ order: 2
     - `verbose` : bool
 
     [__return__] single-nonsingle hits clustering using t-SNE decomposition and KNN clustering, return (dataset_decomp, label). "dataset_decomp" is dataset after decomposition, numpy array, shape=(Nd,no_dims); "label" is predicted label from clustering algorithm, numpy array, shape=(Nd,), return [] if 'clustering'<0
+    
+- **diffusion_map** (dataset, nEigs, neigh\_kept=100, sigma\_opt=1, alpha=1)
+	- `dataset` : raw dataset, numpy ndarray, shape=(Nd,Nx,Ny) or (Nd,Npix)	
+	- `nEigs` : number of dimensions left on eigen vectors, int
+	- `neigh_kept` : number of nearest neighbors to be kept in D(distance) matrix, int
+	- `sigma_opt` : kernel matrix K=exp(-D/mean(D)/sigma_opt), try 0.1~100, float
+	- `alpha` : adjustment factor on kernel matrix, float
+
+	[__return__] The eigen values and vectors after diffusion map embedding. Return a list, [eigenvalue, eigenvector], eigenvalue is a (nEigs,) ndarray, eigenvector is a (Nd,nEigs) ndarray
 
 > image.preprocess
 
