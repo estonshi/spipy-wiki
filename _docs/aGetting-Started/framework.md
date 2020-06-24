@@ -59,13 +59,14 @@ The architecture of spipy package is shown as below:
     * classify
         * `cluster_fSpec` ： single-nonsingle hits clustering using linear/non-linear decomposition and spectural clustering
         * `cluster_fTSNE` : single-nonsingle hits clustering using t-SNE decomposition and KNN clustering
+        * `diffusion_map` : diffusion map embedding and decomposition
     * preprocess
         * `fix_artifact` : reduces artifacts of dataset, where patterns in the dataset should share the same artifacts
         * `fix_artifact_auto` : fix artifacts without providing the position of artifacts
         * `adu2photon` : evaluate adu value per photon and transfer adu patterns to photon counts
         * `hit_find` : hit finding based on chi-square test
         * `hit_find_pearson` : hit finding based on pearson cc score between pattern and background
-        * `cal_correction_factor` : calculate polarization correction and effective area correction factor
+        * `cal_correction_factor` : calculate polarization and effective solid angle correction factor
     * io
         * `readccp4` : read ccp4/mrc files
         * `writeccp4` : write intensity volume into a ccp4/mrc file
@@ -78,7 +79,7 @@ The architecture of spipy package is shown as below:
         * `new_project` : create a new project
         * `config` : configuration
         * `run` : run emc project
-        * `use_project` : switch to a existing project
+        * `use_project` : switch to an existing project
     * tools
         * `get_slice` : generate slices from a 3D model according to given orientations
         * `merge_slice` : merge slices into a 3D model according to given orientations
@@ -87,17 +88,17 @@ The architecture of spipy package is shown as below:
         * `get_quaternion` : calculate quaternions which are uniformly distributed in orientation space
 * [**phase**]() : *phase retrieval network framework (PRNF) or traditional phasing*
     * phmodel
-        * `pInput`,`pOutput`,`pMerge`,`ERA`,`HIO`,`DM`,`RAAR` : different types of phasing models to build phase retrieval network (PRNF)
+        * `pInput`,`pOutput`,`pMerge`,`ERA`,`HIO`,`DM`,`RAAR`,`HPR` : different types of phasing models to build phase retrieval network (PRNF)
     * phexec
         * `Runner` : class, used for execuating phase retrieval network
-    * phase2d *(traditional)*
+    * phase2d *(deprecated)*
         * `new_project` : create a new project
         * `config_project` : edit configuration file
         * `run_project` : start phasing
         * `use_project` : switch to a existing project
-    * phase3d *(traditional)*
+    * phase3d *(deprecated)*
         * the same as phase2d
 * [**simulate**]() : *diffraction simulation*
     * sim_adu
-        * `go_magic` : generates diffraction patterns by atom-reflection/FFT using single/multiple jobs
+        * `go_magic` : simulate diffraction patterns from PDB files using atom reflection or FFT method
 

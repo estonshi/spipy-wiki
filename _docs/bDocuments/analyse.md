@@ -44,9 +44,9 @@ order: 1
     - `lamda` : wave length, unit=Angstrom
     - `pixsize` : physical length of a detector pixel, unit=mm
     - `det_size` : detector size in pixels, (size_x, size_y)
-    - `denter` : center of pattern, (Cx, Cy), default=None
+    - `center` : center of pattern, (Cx, Cy), default=None
 
-    [__return__] map pixels in detector into 3D k-space, return (q_coor, qmax, qmin, q_len). "*q_coor*" is 3D coordinates in k-space, shape=(3,size_x,size_y); "*qmax*" is max q value of detector; "*qmin*" is min q value of detector; "*q_len*" is side length of k space matrix, in pixel.
+    [__return__] map detector pixels into 3D k-space, return (q_coor, qmax, qmin, q_len). "*q_coor*" is 3D coordinates in k-space, shape=(3,size_x,size_y); "*qmax*" is the maximum q value of detector; "*qmin*" is the minimum q value of detector; "*q_len*" is the side length of k space matrix in pixel.
 
 > analyse.saxs
 
@@ -96,9 +96,9 @@ order: 1
 
 - **particle_size_sp** (dataset, exparam, fitarea, badsearchr, method, mask=None, center=None, verbose=True)
     - `dataset` : a set of patterns, numpy array, shape=(Nd,Nx,Ny)
-    - `exparam` : set up parameters of experiment, a list [detector-distance(mm), lambda(A), pixel-length(mm)]
+    - `exparam` : experimental parameters, a list [detector-distance(mm), lambda(A), pixel-length(mm)]
     - `fitarea` : a list [nr, nR], define an ring area (ROI) to do the fitting
-    - `badsearchr` : int, if there are more than 10 Iq peaks within badsearchr (in fit area), the pattern will be dropped, unit=pixel
+    - `badsearchr` : int, if there are more than 10 peaks (within fit area) in the radial profile whose radii<=badsearchr , the pattern will be dropped, unit=pixel
     - `method` : fitting method, str, chosen from 'q0' (use the first Iq minimum position to estimate diameter) or 'lsq' (fit theoretical Iq curve to given patterns to estimate diameter)
     - `mask` : 0/1 two-value numpy array, shape=(Nx,Ny), 1 means masked pixel
     - `center` : center location of diffraction patterns, (Cx,Cy)

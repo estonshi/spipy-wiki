@@ -6,7 +6,7 @@ order: 4
 
 **Phase Retrieval Network Framework (Suggested)**
 
-In this framework, you can use different algorithms to build a phasing network, just like building a neural network using pytorch. Here every **node** contains an algorithm and the **data stream** goes through all of the nodes in your specified order. The framework supports multiple input nodes and one output node. It could do phasing of both **2D pattern** and **3D volume** inputs.
+In this framework, you can use different algorithms to build a phasing network, just like building a neural network using pytorch. Here every **node** contains an algorithm and the **data stream** goes through all of the nodes in your specified order. The framework supports multiple input nodes and single output node. It could do phasing of both **2D pattern** and **3D volume** inputs.
 
 Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algorithms. More methods are under design and will be released later. See an example network below for a straight forward look.
 
@@ -14,7 +14,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
 
 > phase.phmodel
 
-**NOTE-1** : All of the classes in 'phmodel' module has a 'run' function, which will be called by **phexec.Runner** to run a node, users don't need to use it.
+**NOTE-1** : All of the classes in 'phmodel' module has a 'run' function, which will be called by **phexec.Runner** to run a node, please do not change it.
 
 **NOTE-2** : Every instance of classes in 'phmodel' has an 'id' attribute, which is the identical number of a node in the network.
 
@@ -58,7 +58,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
         
         - `name` : name of this node, default is class name
 
-        [__return__] self. Note 'pInput' nodes should be the first layer of network and thus they don't have 'after' function.
+        [__return__] self. The 'pInput' nodes should be the first layer of network and thus they don't have 'after' function.
 
 - class **pOutput** : output node of a phasing network
     - \_\_init\_\_ (self, name=None)
@@ -66,7 +66,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
     - after (self, father_node)
         - `father_node` : add father of this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to this node. Importantly, 'pOutput' node could not be father of any nodes.
+        [__return__] self. You can use this function for serval times to add multiple fathers to this node. Importantly, 'pOutput' node could not be father of any nodes.
 
 - class **pMerge** : doing average to data streams from father nodes
     - \_\_init\_\_ (self, name=None)
@@ -74,17 +74,17 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
     - after (self, father_node)
         - `father_node` : add father to this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to this node.
+        [__return__] self. You can use this function for serval times to add multiple fathers to this node.
 
 - class **ERA** : "Error Reduction" algorithm node
     - \_\_init\_\_ (self, iteration, support_size, name=None)
         - `iteration` : how many iterations for ERA to run, int
-        - `support_size` : (estimation) number of pixels within final retrieved sample, int
+        - `support_size` : (estimated) number of pixels within final retrieved support, int
         - `name` : name of this node, default is class name
     - after (self, father_node)
         - `father_node` : add a father to this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to this node.
+        [__return__] self. You can use this function for serval times to add multiple fathers to this node.
 
 - class **DM** : "Difference Map" algorithm node
     - \_\_init\_\_ (self, iteration, support_size, name=None)
@@ -92,7 +92,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
     - after (self, father_node)
         - `father_node` : add a father to this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
+        [__return__] self. You can use this function for serval times to add multiple fathers to this node.
 
 - class **RAAR** : RAAR algorithm node
     - \_\_init\_\_ (self, iteration, support_size, beta, name=None)
@@ -101,7 +101,7 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
     - after (self, father_node)
         - `father_node` : add a father to this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
+        [__return__] self. You can use this function for serval times to add multiple father to this node.
 
 - class **HIO** : "Hybrid Input Output" algorithm node
     - \_\_init\_\_ (self, iteration, support_size,  gamma, name=None)
@@ -110,31 +110,32 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
     - after (self, father_node)
         - `father_node` : add a father to this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
+        [__return__] self. You can use this function for serval times to add multiple father to this node.
         
 - class **HPR** : "Hybrid projectopn restriction" algorithm node
-    - \_\_init\_\_ (self, iteration, support_size,  gamma, name=None)
+    - \_\_init\_\_ (self, iteration, support_size, gamma, hprcoff=0.5, name=None)
         - `gamma` : greedy rate, a float from (0,1]. If gamma==1, then HIO degenerate to ERA
+        - `hprcoff` : the threshold of overlapping rate (R\_v) between supports from two iterations, a float from (0,1). If R\_v>hprcoff then apply HPR iteration, otherwise apply HIO iteration.
         - others are same with ERA
     - after (self, father_node)
         - `father_node` : add a father to this node
         
-        [__return__] self. Note you can use this function for serval times to add multiple father to a node.
+        [__return__] self. You can use this function for serval times to add multiple fathers to this node.
 
 > phase.phexec
 
 - class **Runner** : running phasing network, support mpi4py parallel
     - \_\_init\_\_ (self, inputnodes = None, outputnode = None, loadfile = None, reload_dataset = None, comm = None)
         - `inputnodes` : a list of "pInput" instances, the input nodes of the whole network
-        - `outputnode` : a "pOutput" instance, the output node of the whole network
+        - `outputnode` : one "pOutput" instance, the output node of the network
         - `loadfile` : str, file path, load network from this json file
         - `reload_dataset` : a dict, {input_node_id : {"pattern\_path" : "xxx.npy", "mask\_path" : "xxx.npy" or None, "initial\_model" : "xxx.npy" or None}, ...}. The input data stream will be reloaded. Only valid when 'loadfile' is given. Necessary when 'loadfile' is a skeleton network file.
-        - `comm` : communicator of MPI ranks. If you use mpi4py, please provide this object. Default is None.
+        - `comm` : communicator of MPI ranks. If you use mpi4py, please provide this variable. Default is None.
 
         [__NOTE__] You can specify either `inputnode` + `outputnode` or `loadfile` + `reload_dataset` to initiate a Runner.
         
     - run (self, repeat=1)
-        - `repeat` : times of independent phasing **of this mpi rank**, int
+        - `repeat` : times of independent phasing **of single mpi rank**, int
     - dump\_model (self, model\_file, skeleton = False)
         - `model_file` : str, file path to save this phasing network
         - `skeleton` : bool, whether to save input data stream of this network, save (False) or not save (True)

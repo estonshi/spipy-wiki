@@ -28,24 +28,24 @@ order: 5
 
 - 'absorption' : bool, whether consider photon absorption, default=True
 
-- 'phy.scatter_factor' : bool, whether consider scattering factor in atomic diffraction, default=True
+- 'phy.scatter_factor' : bool, whether to consider scattering factors in atomic diffraction, default=True
 
-- 'phy.ram_first' : bool, whether try to save memory while running in atomic diffraction, default=True
+- 'phy.ram_first' : bool, whether to save memory while running atomic diffraction simulation, default=True
 
-- 'phy.projection' : bool, whether genrate projections of sample at each orientation in atomic diffraction, default=True
+- 'phy.projection' : bool, whether to genrate projections of the sample at each orientation in atomic diffraction, default=True
 ```
 
 - **go_magic** (method, save_dir, pdb_file, param, euler_mode='random', euler_order='zxz', euler_range=None, predefined=None, verbose=True)
-    - `method` : 'atomic' or 'fft', which means atomic diffraction or fourier transform
-    - `save_dir` : path to save simulation result, a directory path
+    - `method` : 'atomic' or 'fft', which means 'atomic diffraction' or 'fourier transform' method
+    - `save_dir` : the folder path where to save simulation result
     - `pdb_file` : path of input pdb file
-    - `param` : dict, simulation parameters
+    - `param` : dict, simulation parameters (see above)
     - `euler_mode` : how to genreate euler angles, chosen from 'random' or 'predefined'
     - `euler_order` : rotation order, such as 'zxz' or 'zyz' ...
     - `euler_range` : range of euler angles, numpy.array([[alpha_min,alpha_max],[beta_min,beta_max],[gamma_min,gamma_max]]), shape=(3,2), or give None to use native range
     - `predefined` : if euler_mode is 'predefined', then you have to specify all euler angles used for object rotation, shape=(Ne,3)
-    - `verbose` : bool, whether print detail information while running
+    - `verbose` : bool, whether to print detail information while running
 
-    [__return__] patterns and other useful information are saved in a h5 file named by system time, no return
+    [__return__] patterns and other useful information are saved in a h5 file named by OS timestamp, no return
 
     [__NOTICE__] support mpi4py, you need to run 'mpiexec -np $nproc python sim_script.py' to start parallel

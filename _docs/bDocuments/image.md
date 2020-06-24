@@ -171,7 +171,7 @@ order: 2
     - `pixsize` : float, pixel size in mm
     - `center` : detector center, [Cx,Cy], default is None and use geometric center
 
-    [__return__] calculate polarization correction and solid angle effective area correction factor, return numpy array, shape=(Nx,Ny), all values <=1.0
+    [__return__] calculate polarization and effective solid angle correction factor, return numpy array, shape=(Nx,Ny), all values <=1.0
 
 > image.io
 
@@ -196,7 +196,7 @@ order: 2
     - `resolution` : float, the resolution of returned density map, in Angstrom
     - `lamda` : float, laser wavelength in Angstrom
     
-    [__return__] transfer pdb to electron density map, return density map, numpy array, shape depends on resolution
+    [__return__] transfer pdb to electron density map, return density map, 3d numpy array, the size depends on resolution
 
 - **xyz2pdb** (xyz_array, atom_type, b_factor=None, save_file="./convert.pdb")
     - `xyz_array` : numpy array, shape=(N,3), three columns are x,y,z coordinates
@@ -204,7 +204,7 @@ order: 2
     - `b_factor` : array or list, b-factors in pdb file, shape=(N,), default is None then all b-factors=1
     - `save_file` : str, file path to save
 
-    [__return__] write 3D xyz coordinates as a pdb file, no return
+    [__return__] write 3D xyz coordinates into a pdb file, no return
 
 - **cxi_parser** (cxifile, out='std')
     - `cxifile` : str, cxi file path
