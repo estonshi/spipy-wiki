@@ -22,4 +22,5 @@ The scripts only receive command line arguments and output result files.
 - *spi_viewer*
 	- 2D/3D data viewer
 	- 2D mask maker
+	- Forked from [this repo](https://github.com/LiuLab-CSRC/DataViewer)
 	- Use '-h' option to see details
