@@ -29,9 +29,6 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
 
             # input mask (masked pixel is 1, unmasked pixel is 0)
             "mask_path" : xxx.npy,
-
-            # the center location of input pattern
-            "center" : [62,62] (or [62,62,62]),
             
             # radius of central mask, set None to ignore
             "center_mask" : 5,
@@ -146,6 +143,9 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
         - `out` : the output data stream from pOutput node
         - `save_file` : save output data stream to a HDF5 file
 
+    - plot\_result (self, out)
+        - `out` : the output data stream from pOutput node
+
 **--- Programming example to build a network model like the figure above ---**
 
 ```python
@@ -165,7 +165,6 @@ if __name__ == "__main__":
     config_input = {
         "pattern_path" : "pattern.npy",
         "mask_path" : "pat_mask.npy",
-        "center" : [61,61],
         "center_mask" : 5,
         "edge_mask" : None,
         "subtract_percentile" : False,
@@ -191,8 +190,8 @@ if __name__ == "__main__":
     l6 = phmodel.pOutput().after(l5)
 
     # run
-    runner = phexec.Runner(inputnodes = [l1_0, l1_1], outputnode = l6)
-    out = runner.run(repeat = 1)
+    runner = phexec.Runner(inputnodes = [l1_0, l1_1], outputnode = l6, comm=comm)
+    out = runner.run(repeat = 2)
 
     if mrank == 0:
         runner.plot_result(out)
@@ -202,7 +201,7 @@ if __name__ == "__main__":
 
     # Reload network
     runner2 = phexec.Runner(inputnodes = None, outputnode = None, \
-        loadfile = "temp_model.json", reload_dataset = {l1_0.id:newdataset})
+        loadfile = "temp_model.json", reload_dataset = {l1_0.id:newdataset}, comm=comm)
     out = runner2.run(repeat = 1)
 ```
 

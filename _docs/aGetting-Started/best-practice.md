@@ -22,9 +22,12 @@ In [1]: from spipy import *
 ```
 
 * Try functions
-    * Go into *test\_spipy* folder, for each module there are some example python scripts. Play with them !
+    * Go into *demo* folder, for each module there are some example python scripts. Play with them !
 
 ![practice](../../images/testfolder.png)
+
+* Try scripts
+	* After running "make_all.sh" there will be a "bin" folder, try those executable files inside !
 
 * Some results
 	* **spipy.phase.phModel** : Phase retrieval results (2D and 3D)

@@ -12,7 +12,9 @@ order: 5
 
 - 'lambda' : float, wave length of laser [unit : angstrom], default=2.5
 
-- 'detsize' : int, detector size in width and height (square detector) [unit : pixel], default=128
+- 'detsize' : int list, detector size in width and height [unit : pixel], default=[128,128]
+
+- 'detcenter' : float list, detector center location [Cx,Cy] [unit : pixel], default=None and uses geometry center
 
 - 'pixsize' : float, pixel length [unit : mm], default=0.3
 
@@ -27,6 +29,8 @@ order: 5
 - 'photons' : bool, generate photon patterns (True) or adu patterns without poisson noise (False), default=False
 
 - 'absorption' : bool, whether consider photon absorption, default=True
+
+- 'adu_per_eV' : float, detector ADU of 1eV energy, default=0.001
 
 - 'phy.scatter_factor' : bool, whether to consider scattering factors in atomic diffraction, default=True
 

@@ -77,7 +77,9 @@ order: 3
 
 - 'make_detector|in_mask_file' : path of mask file (a numpy/binary file, .npy, .byt, .bin) that operate on input patterns. Usually, most experiments need mask file. In your mask file, 0 marks unmasked area, 1 marks areas that will not be used for orientation recovery but will used in merging, 2 marks areas that will not be used for both orientation recovery and merging. For binary file the dtype should be 'uint8', for numpy file it can be any type. Default is None.
 
-- 'emc|sym_icosahedral'     : bool (0/1), whether to force icosahedral symmetry in orientation recovery
+- 'make_detector|center'    : the center of detector, for example '128 128'. As default, the geometry center is used.
+
+- 'emc|sym_icosahedral'     : bool (0/1), whether to force icosahedral symmetry in orientation recovery.
 
 - 'emc|selection'           : 'even_only', 'odd_only' and 'None', where 'even' / 'odd' means only patterns whose index is even / odd will be used. 'None' means all patterns will be used.
 

@@ -27,4 +27,4 @@ order: 1
 
 #### Note
 
-The graphics UI doesn't support v3.1 features yet. 
+The graphics UI doesn't support v3.1 & v3.2 features yet. 

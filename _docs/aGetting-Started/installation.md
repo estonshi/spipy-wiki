@@ -15,7 +15,7 @@ order: 1
 
 - Download from [github repository](https://github.com/LiuLab-CSRC/spipy), or
 ```bash
-[user@linux ~]$ git clone https://github.com/LiuLab-CSRC/spipy -b v3
+[user@linux ~]$ git clone https://github.com/LiuLab-CSRC/spipy -b v3.2
 ```
 - Go into the folder and run installation script
 ```bash
@@ -26,5 +26,7 @@ order: 1
 (base)[user@linux spipy]$ ./make_all.sh
 # For MacOS and Linux without openmpi and gsl installed
 (base)[user@linux spipy]$ ./make_all.sh -x
+# Do not check and setup new anaconda environment
+(base)[user@linux spipy]$ ./make_all.sh -e
 ```
 - Notice ! Do **NOT** **delete** or **move** original spipy folder after installation !

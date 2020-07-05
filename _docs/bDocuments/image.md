@@ -171,7 +171,7 @@ order: 2
     - `pixsize` : float, pixel size in mm
     - `center` : detector center, [Cx,Cy], default is None and use geometric center
 
-    [__return__] calculate polarization and effective solid angle correction factor, return numpy array, shape=(Nx,Ny), all values <=1.0
+    [__return__] calculate polarization and solid angle correction factor, return numpy array, shape=(Nx,Ny), all values <=1.0
 
 > image.io
 
