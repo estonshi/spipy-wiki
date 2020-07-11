@@ -58,6 +58,13 @@ order: 1
     - `large_r` : int, radius of area for sampling friedel twin points, in pixel
 
     [__return__] central point (q=0) of the pattern, (Cx, Cy)
+    
+- **center_refine** (pattern, center, mask=None, sampling=300, roir=20)
+	- `pattern` : input pattern, numpy array, shape=(Nx,Ny)
+	- `center` : center from friedel_search, [Cx,Cy]
+	- `mask` : 0/1 two-value numpy array, shape=(Nx,Ny), 1 means masked pixel. Nan/Inf/negtive pixels should be maksed
+	- `sampling` : Number of sampled pixels for refinement
+	- `roir` : Radius of a circle area for pixel sampling, in pixel
 
 - **inten_profile_vaccurate** (dataset, mask, *exp_param)
     - `dataset` : numpy array, shape=(Nd,Nx,Ny)

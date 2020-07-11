@@ -24,3 +24,9 @@ The scripts only receive command line arguments and output result files.
 	- 2D mask maker
 	- Forked from [this repo](https://github.com/LiuLab-CSRC/DataViewer)
 	- Use '-h' option to see details
+- *spi_events*
+	- Parse CXI/HDF5/TIF... files and list events
+	- Use '-h' option to see details
+- *spi_qcenter*
+	- Calculate coordinates of central point (q=0) of diffraction patterns
+	- Use '-h' option to see details

@@ -22,11 +22,11 @@ order: 1
 [user@linux ~]$ cd spipy
 [user@linux spipy]$ chmod u+x ./make_all.sh
 [user@linux spipy]$ conda activate base
-# For Linux with openmpi and gsl installed
+# Full compiling and environment setup
 (base)[user@linux spipy]$ ./make_all.sh
-# For MacOS and Linux without openmpi and gsl installed
+# Do not compile EMC part (which needs openmpi and gsl)
 (base)[user@linux spipy]$ ./make_all.sh -x
-# Do not check and setup new anaconda environment
+# Do not check or setup anaconda environment
 (base)[user@linux spipy]$ ./make_all.sh -e
 ```
 - Notice ! Do **NOT** **delete** or **move** original spipy folder after installation !
