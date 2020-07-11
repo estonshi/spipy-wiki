@@ -16,6 +16,7 @@ The architecture of spipy package is shown as below:
     * saxs
         * `grid` : calculate grid of a pattern
         * `friedel_search` : return the center point (zero frequency) of a pattern
+        * `center_refine` : refine the center location from 'friedel_search'
         * `inten_profile_vaccurate` : the averaged intensity radial profile
         * `inten_profile_vfast` : fast calculation of intensity profile
         * `cal_saxs` : the saxs pattern from a pattern set

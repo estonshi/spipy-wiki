@@ -6,6 +6,8 @@ order: 1
 
 In *spipy/scripts* folder, there are scripts for users to use spipy easily. The installation procedure will generate executable files (in *bin* folder) to run these scripts.
 
+**NOTICE** All of the *mask* file used in spipy scripts are required to contain a two-value array, where **masked pixels** should take the value of **1** while unmasked pixels are 0.
+
 The scripts only receive command line arguments and output result files.
 
 #### Usage and Document
