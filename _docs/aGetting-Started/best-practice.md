@@ -37,7 +37,7 @@ In [1]: from spipy import *
 ![prnf-re-3d](../../images/3D-phasing.png)
 	* **spipy.simulate.sim_adu** : simulation results (intensity pattern and photon pattern)
 ![simulation](../../images/simulation.png)
-	* **spipy.image.io** : read pdb, transfer to density map and view ([DataViewer-download](https://github.com/estonshi/DataViewer))
+	* **spipy.image.io** : read pdb, transfer to density map and view (Use [spi_viewer](../dScripts/Introduction.md) script or [DataViewer](https://github.com/estonshi/DataViewer))
 ![readpdb](../../images/pdb2density.jpg)
 	* **spipy.image.preprocess** : hit-finding, transfer intensity to photon, fix artifact, ...
 ![fix-artifact](../../images/fix_art_auto.png)

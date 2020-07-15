@@ -32,3 +32,6 @@ The scripts only receive command line arguments and output result files.
 - *spi_qcenter*
 	- Calculate coordinates of central point (q=0) of diffraction patterns
 	- Use '-h' option to see details
+- *spi_darkcal*
+	- Dark calibration of SPI experiment
+	- Use '-h' option to see details

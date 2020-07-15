@@ -96,7 +96,7 @@ order: 2
     - `nneighbors` : number of neighbors of each point, considered only when decomposition method is 'LLE'
     - `LLEmethod` : LLE method, choosen from 'standard' (standard locally linear embedding algorithm), 'modified' (modified locally linear embedding algorithm), 'hessian' (Hessian eigenmap method) and 'ltsa' (local tangent space alignment algorithm)
     - `clustering` : int, whether to do clustering (<0 or >0) and how many classes (value of this paramater)
-    - `njobs` : int, number of subprocesses
+    - `njobs` : int, number of subprocesses, cannot be used across nodes
     - `verbose` : bool
 
     [__return__] single-nonsingle hits clustering using linear/non-linear decomposition and spectural clustering, return (dataset_decomp, label). "dataset_decomp" is dataset after decomposition, numpy array, shape=(Nd,ncomponent); "label" is predicted label from clustering algorithm, numpy array, shape=(Nd,), return [] if 'clustering'<0
@@ -113,7 +113,7 @@ order: 2
     - `theta` : float 0~1, the speed/accuracy trade-off parameter, theta=1 means highest speed with lowest accuracy
     - `randseed` : int, if it is >=0, then use it as initial value's generating seed; else use current time as random seed
     - `clustering` : int, whether to do clustering (<0 or >0) and how many classes (value of this param)
-    - `njobs` : int, number of subprocesses
+    - `njobs` : int, number of subprocesses, cannot be used across nodes
     - `verbose` : bool
 
     [__return__] single-nonsingle hits clustering using t-SNE decomposition and KNN clustering, return (dataset_decomp, label). "dataset_decomp" is dataset after decomposition, numpy array, shape=(Nd,no_dims); "label" is predicted label from clustering algorithm, numpy array, shape=(Nd,), return [] if 'clustering'<0
@@ -158,7 +158,7 @@ order: 2
 - **fix_artifact_auto** (dataset, estimated_center, njobs=1, mask=None, vol_of_bins=100)
     - `dataset` : a dataset of patterns, numpy array, shape=(Nd,Nx,Ny), Nd>1000 is recommended
     - `estimated_center` : estimated pattern center in pixels, (Cx,Cy)
-    - `njobs` : number of subprocesses
+    - `njobs` : number of subprocesses, cannot be used across nodes
     - `mask` : 0/1 two-value numpy array, shape=(Nx,Ny), 1 means masked pixel
     - `vol_of_bins` : int, the number of similar patterns that will be processed together in a group, >100 will be good
     
@@ -172,6 +172,13 @@ order: 2
     - `center` : detector center, [Cx,Cy], default is None and use geometric center
 
     [__return__] calculate polarization and solid angle correction factor, return numpy array, shape=(Nx,Ny), all values <=1.0
+    
+- **avg_pooling** (dataset, factor, padding=False)
+	- `dataset` : single or multiple patterns, numpy array, shape=(Np, Nx, Ny) or (Nx, Ny)
+	- `factor` : dowsampling factor, int
+	- `padding` : whether to pad zero on edges if the shape is not a multiple of factor, bool. If padding is False then the edges will be cropped.
+
+	[__return__] dataset after downsampling by a factor of 'factor', return numpy array, shape=(Np,floor(Nx/factor),floor(Ny/factor)) if padding=False, shape=(Np,ceil(Nx/factor),ceil(Ny/factor)) if padding=True
 
 > image.io
 
