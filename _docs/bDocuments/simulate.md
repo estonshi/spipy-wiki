@@ -24,7 +24,7 @@ order: 5
 
 - 'num_data' : number of patterns to generate, default=100
 
-- 'fluence' : laser fluence [unit : photons/pulse], usually 1.0e14 ~ 1.0e16 is reasonable for most situations, default=1.5e14
+- 'fluence' : laser fluence [unit : photons/pulse], usually 1.0e14 ~ 1.0e16 is reasonable for most situations, default=1.5e11
 
 - 'photons' : bool, generate photon patterns (True) or adu patterns without poisson noise (False), default=False
 
@@ -33,6 +33,8 @@ order: 5
 - 'adu_per_eV' : float, detector ADU of 1eV energy, default=0.001
 
 - 'phy.scatter_factor' : bool, whether to consider scattering factors in atomic diffraction, default=True
+
+- 'phy.b_factor' : float, B-factor value to describe atom displacement [unit : angstrom^2], default=20.0, displacement = sqrt( B_factor / 79.0 )
 
 - 'phy.ram_first' : bool, whether to save memory while running atomic diffraction simulation, default=True
 
