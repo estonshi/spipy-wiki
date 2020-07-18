@@ -33,5 +33,8 @@ The scripts only receive command line arguments and output result files.
 	- Calculate coordinates of central point (q=0) of diffraction patterns
 	- Use '-h' option to see details
 - *spi_darkcal*
-	- Dark calibration of SPI experiment
+	- Dark calibration script for SPI data
+	- Use '-h' option to see details
+- *spi_hitfinder*
+	- Hit finding script for SPI data
 	- Use '-h' option to see details
