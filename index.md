@@ -20,8 +20,8 @@ There are multiple kinds of imaging for XFEL, such as SFX, WAXS, SPI, etc.
 Our group focus on single particle imaging using biological samples such as virus and proteins.
 In the meanwhile, other materials like inorganic compounds are also suitable for this experiment.
 
-**spipy** is hosted on [Github](https://github.com/LiuLab-CSRC/spipy)
-and maintained by `ycshi` from Tsinghua University and Beijing Computational Science Research Center.
+**spipy** is hosted on [Github](https://github.com/LiuLab-CSRC/spipy) and [Gitee](https://gitee.com/eston/spipy),
+maintained by `ycshi` from Tsinghua University and Beijing Computational Science Research Center.
 Everyone is welcomed to contact me for discussion or bug report.
 
 > Author email : shiyc12 *AT* csrc.ac.cn
