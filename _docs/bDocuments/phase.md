@@ -133,6 +133,9 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
         
     - run (self, repeat=1)
         - `repeat` : times of independent phasing **of single mpi rank**, int
+
+        [__return__] phasing results, a dict containning keys : ["sample_ret", "support", "PRTF", "background", "eMod", "eCon", "stream_path", "diffraction_amp"], **only** rank-0 process will return results.
+        
     - dump\_model (self, model\_file, skeleton = False)
         - `model_file` : str, file path to save this phasing network
         - `skeleton` : bool, whether to save input data stream of this network, save (False) or not save (True)
@@ -140,11 +143,11 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
         [__return__] A file will be generated to describe the network you created. You can share this file to others to build a same network.
 
     - save\_h5 (self, out, save_file)
-        - `out` : the output data stream from pOutput node
-        - `save_file` : save output data stream to a HDF5 file
+        - `out` : a dict, the phasing results from 'Runner.run' function
+        - `save_file` : save results to a specific HDF5 file
 
     - plot\_result (self, out)
-        - `out` : the output data stream from pOutput node
+        - `out` : a dict, the phasing results from 'Runner.run' function
 
 **--- Programming example to build a network model like the figure above ---**
 
