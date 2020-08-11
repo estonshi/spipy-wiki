@@ -36,13 +36,13 @@ Now the framework contains **ERA** / **HIO** / **DM** / **RAAR** / **HPR** algor
             # inside and outside radius of a ring area to be masked, set None to ignore
             "edge_mask" : [60,64],
             
-            # inside and outside radius of a ring area where pattern pixels will be set to 0
+            # inside and outside radius of a ring area where pattern pixels will be set to 0, set None to ignore
             "edge_remove" : None,
             
-            # subtract input pattern by a percentile of itself, usually set to False
+            # subtract input pattern by a percentile of itself, a float within (0,1), set False to ignore
             "subtract_percentile" : False,
             
-            # radius a fixed circle support, set None to ignore
+            # radius of a fixed circle support, set None to ignore
             "fixed_support_r" : 10,
             
             # whether to fit backgound in phasing

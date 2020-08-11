@@ -68,14 +68,14 @@ order: 3
 
 - 'emc|need_scaling'        : whether need to scale patterns' intensities
 
-- 'emc|beta'                : beta value of emc method
+- 'emc|beta'                : beta value of emc method, usually 0.001~0.01 is fine for diffraction patterns, smaller beta value means slower convergence speed, but higher accuracy for high SNR dataset
 
 - 'emc|beta_schedule'       : for example, if 'emc|beta_schedule' = '1.414 10', that means for every 10 iterations, beta = beta * 1.414
 
 # EMC advanced parameters
-- 'parameters|ewald_rad'    : Radius of curvature of the Ewald sphere in voxels, used to control oversampling rate in reciprocal space. For default, oversampling rate is controlled to be the same with experimental patterns. Larger ewald_rad means less oversampling and smaller reciprocal scattering matrix.
+- 'parameters|ewald_rad'    : Radius of curvature of the Ewald sphere (unit=voxels), used to control oversampling rate in reciprocal space. For default, oversampling rate is set as the same with experimental patterns, where 'ewald_rad'='detd'/'pixelsize'. Larger ewald_rad means smaller oversampling rate and reciprocal scattering matrix.
 
-- 'make_detector|in_mask_file' : path of mask file (a numpy/binary file, .npy, .byt, .bin) that operate on input patterns. Usually, most experiments need mask file. In your mask file, 0 marks unmasked area, 1 marks areas that will not be used for orientation recovery but will used in merging, 2 marks areas that will not be used for both orientation recovery and merging. For binary file the dtype should be 'uint8', for numpy file it can be any type. Default is None.
+- 'make_detector|in_mask_file' : path of mask file (a numpy/binary file, .npy, .byt, .bin) that operate on input patterns. Usually, most experiments need mask file. In your mask file, 0 marks unmasked area, 1 marks areas that will not be used for orientation recovery but will be used in merging, 2 marks areas that will not be used for both orientation recovery and merging. For binary file the dtype should be 'uint8', for numpy file it can be any type. Default is None.
 
 - 'make_detector|center'    : the center of detector, for example '128 128'. As default, the geometry center is used.
 
@@ -83,7 +83,7 @@ order: 3
 
 - 'emc|selection'           : 'even_only', 'odd_only' and 'None', where 'even' / 'odd' means only patterns whose index is even / odd will be used. 'None' means all patterns will be used.
 
-- 'emc|start_model_file'    : path of file that store initial model which will be used at the start of emc program. The format should be '.bin' binary file for C 'fopen' to read.
+- 'emc|start_model_file'    : path of data file that store initial model which will be used at the start of emc program. The format should be '.bin' binary file for C 'fopen' to read.
 ```
 
 - **new_project** (data_path, inh5, path=None, name=None)

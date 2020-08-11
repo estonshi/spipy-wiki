@@ -34,7 +34,7 @@ order: 5
 
 - 'phy.scatter_factor' : bool, whether to consider scattering factors in atomic diffraction, default=True
 
-- 'phy.b_factor' : float, B-factor value to describe atom displacement [unit : angstrom^2], default=20.0, displacement = sqrt( B_factor / 79.0 )
+- 'phy.b_factor' : float, B-factor value to describe atom displacement in atomic diffraction [unit : angstrom^2], default=20.0, displacement = sqrt( B_factor / 79.0 )
 
 - 'phy.ram_first' : bool, whether to save memory while running atomic diffraction simulation, default=True
 
